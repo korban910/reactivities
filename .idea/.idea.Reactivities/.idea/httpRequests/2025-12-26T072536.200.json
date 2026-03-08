@@ -1,0 +1,32 @@
+[
+  {
+    "date": "2025-12-27",
+    "temperatureC": 19,
+    "temperatureF": 66,
+    "summary": "Balmy"
+  },
+  {
+    "date": "2025-12-28",
+    "temperatureC": 9,
+    "temperatureF": 48,
+    "summary": "Cool"
+  },
+  {
+    "date": "2025-12-29",
+    "temperatureC": 50,
+    "temperatureF": 121,
+    "summary": "Scorching"
+  },
+  {
+    "date": "2025-12-30",
+    "temperatureC": -10,
+    "temperatureF": 15,
+    "summary": "Warm"
+  },
+  {
+    "date": "2025-12-31",
+    "temperatureC": 53,
+    "temperatureF": 127,
+    "summary": "Sweltering"
+  }
+]
