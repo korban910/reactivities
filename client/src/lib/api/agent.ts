@@ -8,7 +8,7 @@ type ApiErrorResponse = {
 };
 
 const sleep = (delay: number) =>
-  new Promise(resolve => setTimeout(resolve, delay));
+  new Promise((resolve) => setTimeout(resolve, delay));
 
 const agent = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -36,19 +36,19 @@ const errorHandlers: Record<
   },
 };
 
-agent.interceptors.request.use(config => {
+agent.interceptors.request.use((config) => {
   store.uiStore.isBusy();
   return config;
 });
 
 agent.interceptors.response.use(
-  async response => {
-    await sleep(1000);
+  async (response) => {
+    if (import.meta.env.DEV) await sleep(1000);
     store.uiStore.isIdle();
     return response;
   },
-  async error => {
-    await sleep(1000);
+  async (error) => {
+    if (import.meta.env.DEV) await sleep(1000);
     store.uiStore.isIdle();
 
     const { status, data } = error.response ?? {};
@@ -59,7 +59,7 @@ agent.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  }
+  },
 );
 
 export default agent;
