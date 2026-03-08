@@ -1,0 +1,10 @@
+﻿[env._]
+file = ".env"
+
+[tasks.db-sync-appDbContext]
+description = "Synchronize the database"
+run = "dotnet ef database update --project Persistence/Persistence.csproj --startup-project API/API.csproj --context Persistence.Contexts.AppDbContext --configuration Debug --verbose"
+
+[tasks.db-drop]
+description = "Drop the database"
+run = "dotnet ef database drop --project Persistence/Persistence.csproj --startup-project API/API.csproj --context Persistence.Contexts.AppDbContext --configuration Debug --verbose"
