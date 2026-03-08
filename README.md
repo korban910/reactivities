@@ -108,10 +108,16 @@ sudo sysctl fs.inotify.max_user_instances=512
 
 ### Build
 
-Inside client folder:
+Inside `client` folder:
 
 ```
 pnpm run build
+```
+
+Inside `API` folder:
+
+```
+dotnet publish -c Release -o ./bin/Publish
 ```
 
 ### Run docker file
@@ -121,3 +127,8 @@ Inside the root folder:
 ```
 docker compose up -d
 ```
+
+### Deploy
+
+Inside `API/bin/Publish` folder, right click Publish then select `Deploy to Web Application` then `Deploy` to
+the corrrect web app.
