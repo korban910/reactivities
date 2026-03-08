@@ -45,9 +45,14 @@ app.UseCors("Development");
 app.UseAuthentication();
 app.UseAuthorization();
 
+// use wwwroot folder
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
 app.MapControllers();
 app.MapGroup(Environment.GetEnvironmentVariable("API")!).MapIdentityApi<User>(); //  api/login
 app.MapHub<CommentHub>(Environment.GetEnvironmentVariable("COMMENT_PATH")!); // SignalR
+app.MapFallbackToController("Index", "Fallback");
 
 using var scope = app.Services.CreateScope();
 var services = scope.ServiceProvider;
