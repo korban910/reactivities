@@ -18,10 +18,26 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Set up node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: "10"
+
+      - name: Install deps and build react app
+        run: |
+          cd client
+          pnpm install
+          pnpm run build
+
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '10.x'
+          dotnet-version: "10.x"
 
       - name: Build with dotnet
         run: dotnet build --configuration Release
@@ -47,7 +63,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: .net-app
-      
+
       - name: Login to Azure
         uses: azure/login@v2
         with:
@@ -59,7 +75,6 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'reactivities-app-course'
-          slot-name: 'Production'
+          app-name: "reactivities-app-course"
+          slot-name: "Production"
           package: .
-          
