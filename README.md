@@ -132,3 +132,6 @@ docker compose up -d
 
 Inside `API/bin/Publish` folder, right click Publish then select `Deploy to Web Application` then `Deploy` to
 the corrrect web app.
+
+In the web app on Azure, select `Deployment` then `Deployment Center` to
+select the corresponding `Repository` and `Branch`.
