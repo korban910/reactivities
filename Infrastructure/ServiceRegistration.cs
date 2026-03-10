@@ -1,9 +1,13 @@
 using Application.Interfaces;
+using Domain;
 using Infrastructure.Constant;
+using Infrastructure.Email;
 using Infrastructure.Photos;
 using Infrastructure.Security;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
+using Resend;
 
 namespace Infrastructure;
 
@@ -25,8 +29,17 @@ public static class ServiceRegistration
             options.ApiKey = Environment.GetEnvironmentVariable("CLOUD_API_KEY")!;
             options.ApiSecret = Environment.GetEnvironmentVariable("CLOUD_API_SECRET")!;
         });
+
+        services.AddHttpClient<ResendClient>();
+
+        services.Configure<ResendClientOptions>(options =>
+        {
+            options.ApiToken = Environment.GetEnvironmentVariable("RESEND_API_KEY")!;
+        });
         
         services.AddTransient<IAuthorizationHandler, IsHostRequirementHandler>();
+        services.AddTransient<IResend, ResendClient>();
+        services.AddTransient<IEmailSender<User>, EmailSender>();
         services.AddScoped<IPhotoService, PhotoService>();
         services.AddScoped<IUserAccessor, UserAccessor>();
     }

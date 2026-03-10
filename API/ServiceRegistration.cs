@@ -26,6 +26,7 @@ public static class ServiceRegistration
         services.AddIdentityApiEndpoints<User>(opt =>
         {
             opt.User.RequireUniqueEmail = true;
+            opt.SignIn.RequireConfirmedEmail = true;
         })
         .AddRoles<IdentityRole>()
         .AddEntityFrameworkStores<AppDbContext>();
