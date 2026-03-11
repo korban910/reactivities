@@ -40,14 +40,25 @@ const useAccount = () => {
     }
   })
 
+  const verifyEmail = useMutation({
+    mutationFn: async ({ userId, code } : VerifyEmail) => {
+      await agent.get(`/confirmEmail?userId=${userId}&code=${code}`);
+    }
+  })
+
+  const resendConfirmationEmail = useMutation({
+    mutationFn: async (email: string) => {
+      await agent.get(`/account/resend-confirm-email?email=${email}`)
+    },
+    onSuccess: () => {
+      toast.success('Email sent - please check your email');
+    }
+  })
+
   const registerUser = useMutation({
     mutationFn: async (credential: RegisterSchema) => {
       await agent.post('/account/register', credential)
     },
-    onSuccess: async () => {
-      toast.success('User registered successfully - you can now login');
-      navigate('/login');
-    }
   })
 
   return {
@@ -56,6 +67,8 @@ const useAccount = () => {
     loginUser,
     logoutUser,
     registerUser,
+    verifyEmail,
+    resendConfirmationEmail,
   }
 };
 

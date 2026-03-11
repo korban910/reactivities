@@ -93,3 +93,8 @@ type ChatComment = {
   displayName: string
   imageUrl?: string
 }
+
+type VerifyEmail = {
+  userId: string
+  code: string
+}
