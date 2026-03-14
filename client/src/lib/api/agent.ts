@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import router from "../../router/Routes";
 
 type ApiErrorResponse = {
+  detail: string;
   errors?: Record<string, string[]>;
 };
 
@@ -25,8 +26,13 @@ const errorHandlers: Record<
     }
     toast.error("Bad request");
   },
-  401: () => {
-    toast.error("Unauthorized");
+  401: (data) => {
+    if (data.detail === 'NotAllowed'){
+      throw new Error(data.detail);
+    } else {
+      toast.error("Unauthorized");
+    }
+    //console.log(`data: ${JSON.stringify(data)}`);
   },
   404: () => {
     router.navigate("/not-found");

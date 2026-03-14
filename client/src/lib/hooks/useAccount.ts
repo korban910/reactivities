@@ -47,8 +47,13 @@ const useAccount = () => {
   })
 
   const resendConfirmationEmail = useMutation({
-    mutationFn: async (email: string) => {
-      await agent.get(`/account/resend-confirm-email?email=${email}`)
+    mutationFn: async ({email, userId} : {email: string | null, userId: string | null}) => {
+      await agent.get(`/account/resend-confirm-email`, {
+        params: {
+          email: email,
+          userId: userId
+        }
+      })
     },
     onSuccess: () => {
       toast.success('Email sent - please check your email');

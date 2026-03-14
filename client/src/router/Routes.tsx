@@ -12,6 +12,7 @@ import LoginForm from "../features/account/LoginForm.tsx";
 import RequireAuth from "./RequireAuth.tsx";
 import RegisterForm from "../features/account/RegisterForm.tsx";
 import ProfilePage from "../features/profiles/ProfilePage.tsx";
+import VerifyEmail from "../features/account/VerifyEmail.tsx";
 
 const router = createBrowserRouter([
   {
@@ -32,6 +33,7 @@ const router = createBrowserRouter([
       { path: 'server-error', element: <ServerError /> },
       { path: 'login', element: <LoginForm /> },
       { path: 'register', element: <RegisterForm /> },
+      { path: 'confirm-email', element: <VerifyEmail /> },
       { path: '*', element: <Navigate replace to={'/not-found'} /> },
     ]
   }

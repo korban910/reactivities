@@ -18,6 +18,7 @@ const RegisterForm = () => {
     resolver: zodResolver(registerSchema)
   });
 
+  // eslint-disable-next-line react-hooks/incompatible-library
   const email = watch('email');
 
   const onSubmit = async (data: RegisterSchema) => {
