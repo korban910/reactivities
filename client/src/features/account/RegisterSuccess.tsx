@@ -33,7 +33,10 @@ const RegisterSuccess = (
       <Typography variant="h3" gutterBottom>
         Please check your email to confirm your account
       </Typography>
-      <Button fullWidth onClick={() => resendConfirmationEmail.mutate(email)}>
+      <Button fullWidth onClick={() => resendConfirmationEmail.mutate({
+        email,
+        userId: null
+      })}>
         Re-send confirmation email
       </Button>
     </Paper>
