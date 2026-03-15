@@ -5,7 +5,7 @@ import MenuItemLink from "../shared/components/MenuItemLink.tsx";
 import useStore from "../../lib/hooks/useStore.ts";
 import { observer } from "mobx-react-lite";
 import useAccount from "../../lib/hooks/useAccount.ts";
-import UserMenu from "../shared/components/UserMenu.tsx";
+import UserMenu from "./UserMenu.tsx";
 
 const NavBar = observer(() => {
   const { uiStore } = useStore();

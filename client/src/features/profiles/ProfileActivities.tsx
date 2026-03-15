@@ -2,7 +2,7 @@ import { useParams } from "react-router";
 import { useProfile } from "../../lib/hooks/useProfile.ts";
 import { useState } from "react";
 import { Box, Grid, Tab, Tabs, Typography } from "@mui/material";
-import UserActivity from "../../app/shared/components/UserActivity.tsx";
+import UserActivity from "../../app/layout/UserActivity.tsx";
 const ProfileActivities = () => {
   const { userId } = useParams();
   const [filter, setFilter] = useState("future");

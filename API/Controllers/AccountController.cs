@@ -104,4 +104,22 @@ public class AccountController(
         
         return NoContent();
     }
+
+    [HttpPost("change-password")]
+    public async Task<ActionResult> ChangePassword(ChangePasswordRequest request)
+    {
+        var user = await signInManager.UserManager.GetUserAsync(User);
+
+        if (user == null)
+        {
+            return Unauthorized();
+        }
+
+        var result =
+            await signInManager.UserManager.ChangePasswordAsync(user, request.CurrentPassword, request.NewPassword);
+        
+        return result.Succeeded ?
+            Ok() :
+            BadRequest(result.Errors.FirstOrDefault()?.Description);
+    }
 }

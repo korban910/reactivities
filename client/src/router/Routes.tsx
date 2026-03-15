@@ -13,6 +13,7 @@ import RequireAuth from "./RequireAuth.tsx";
 import RegisterForm from "../features/account/RegisterForm.tsx";
 import ProfilePage from "../features/profiles/ProfilePage.tsx";
 import VerifyEmail from "../features/account/VerifyEmail.tsx";
+import ChangePasswordForm from "../features/account/ChangePasswordForm.tsx";
 
 const router = createBrowserRouter([
   {
@@ -24,7 +25,8 @@ const router = createBrowserRouter([
           { path: 'activities/:activityId', element: <ActivityDetailPage /> },
           { path: 'createActivity', element: <ActivityForm key='create' /> },
           { path: 'edit/:activityId', element: <ActivityForm /> },
-          { path: 'profiles/:userId', element: <ProfilePage />}
+          { path: 'profiles/:userId', element: <ProfilePage />},
+          { path: 'change-password', element: <ChangePasswordForm />}
       ]},
       { path: '', element: <HomePage /> },
       { path: 'counter', element: <Counter /> },
