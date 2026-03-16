@@ -98,3 +98,9 @@ type VerifyEmail = {
   userId: string
   code: string
 }
+
+type ResetPassword = {
+  email: string
+  resetCode: string
+  newPassword: string
+}

@@ -76,6 +76,30 @@ const useAccount = () => {
     }
   })
 
+  const forgotPassword = useMutation({
+    mutationFn: async(email: string) => {
+      await agent.post('/forgotPassword', {
+        email
+      });
+    },
+    onSuccess: () => {
+      toast.success('Password reset requested - please check your email');
+    }
+  })
+
+  const resetPassword = useMutation({
+    mutationFn: async (data: ResetPassword)=> {
+      await agent.post('/resetPassword', {
+        email: data.email,
+        resetCode: data.resetCode,
+        newPassword: data.newPassword
+      })
+    },
+    onSuccess: () => {
+      toast.success('Password reset successfully - you can now sign in');
+    }
+  })
+
   return {
     user,
     loadingUserInfo,
@@ -85,6 +109,8 @@ const useAccount = () => {
     verifyEmail,
     resendConfirmationEmail,
     changePassword,
+    forgotPassword,
+    resetPassword
   }
 };
 
