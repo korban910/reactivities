@@ -5,7 +5,7 @@ import { type FieldValues, FormProvider, type Resolver, useForm } from "react-ho
 type AccountFormWrapperProps<TFormData extends FieldValues> = {
   title: string;
   icon: ReactNode;
-  onSubmit: (data: TFormData) => void;
+  onSubmit: (data: TFormData) => Promise<void>;
   children: ReactNode;
   submitButtonText: string;
   resolver?: Resolver<TFormData>;
@@ -29,7 +29,7 @@ const AccountFormWrapper = <TFormData extends FieldValues>(
   });
 
   const formSubmit = async (data: TFormData) => {
-    onSubmit(data);
+    await onSubmit(data);
     if (reset) methods.reset();
   }
 

@@ -14,6 +14,8 @@ import RegisterForm from "../features/account/RegisterForm.tsx";
 import ProfilePage from "../features/profiles/ProfilePage.tsx";
 import VerifyEmail from "../features/account/VerifyEmail.tsx";
 import ChangePasswordForm from "../features/account/ChangePasswordForm.tsx";
+import ForgotPasswordForm from "../features/account/ForgotPasswordForm.tsx";
+import ResetPasswordForm from "../features/account/ResetPasswordForm.tsx";
 
 const router = createBrowserRouter([
   {
@@ -36,6 +38,8 @@ const router = createBrowserRouter([
       { path: 'login', element: <LoginForm /> },
       { path: 'register', element: <RegisterForm /> },
       { path: 'confirm-email', element: <VerifyEmail /> },
+      { path: 'forgot-password', element: <ForgotPasswordForm /> },
+      { path: 'reset-password', element: <ResetPasswordForm /> },
       { path: '*', element: <Navigate replace to={'/not-found'} /> },
     ]
   }
