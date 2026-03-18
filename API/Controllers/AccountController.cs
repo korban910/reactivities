@@ -1,5 +1,7 @@
+using System.Net.Http.Headers;
 using System.Text;
 using Contracts.Account.Requests;
+using Contracts.Account.Responses;
 using Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -13,6 +15,103 @@ public class AccountController(
     SignInManager<User> signInManager,
     IEmailSender<User> emailSender) : BaseApiController
 {
+    [AllowAnonymous]
+    [HttpPost("github-login")]
+    public async Task<ActionResult> LoginWithGitHub(string code)
+    {
+        if (string.IsNullOrEmpty(code))
+        {
+            return BadRequest("Missing authorization code");
+        }
+        
+        using var httpClient = new HttpClient();
+        httpClient.DefaultRequestHeaders.Accept
+            .Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        
+        // step 1 - exchange code for access token
+        var tokenResponse = await httpClient.PostAsJsonAsync("https://github.com/login/oauth/access_token", 
+            new GitHubAuthRequest 
+            {
+                Code = code,
+                ClientId = Environment.GetEnvironmentVariable("GITHUB_CLIENT_ID")!,
+                ClientSecret = Environment.GetEnvironmentVariable("GITHUB_CLIENT_SECRET")!,
+                RedirectUri = $"{Environment.GetEnvironmentVariable("CLIENT_APP_URL")}/auth-callback"!
+            });
+
+        if (!tokenResponse.IsSuccessStatusCode)
+        {
+            return BadRequest("Failed to get access token");
+        }
+        
+        var tokenContent = await tokenResponse.Content.ReadFromJsonAsync<GitHubTokenResponse>();
+
+        if (string.IsNullOrEmpty(tokenContent?.AccessToken))
+        {
+            return BadRequest("Failed to retrieve access token");
+        }
+        
+        // step 2 - fetch user info from GitHub
+        httpClient.DefaultRequestHeaders.Authorization = 
+            new AuthenticationHeaderValue("Bearer", tokenContent.AccessToken);
+        httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(Environment.GetEnvironmentVariable("GITHUB_USER_AGENT"));
+        
+        var userResponse = await httpClient.GetAsync("https://api.github.com/user");
+
+        if (!userResponse.IsSuccessStatusCode)
+        {
+            return BadRequest("Failed to fetch user from GitHub");
+        }
+        
+        var user = await userResponse.Content.ReadFromJsonAsync<GitHubUserResponse>();
+
+        if (user == null)
+        {
+            return BadRequest("Failed to fetch user from GitHub");
+        }
+        
+        // step 3 - getting the email if needed
+        if (string.IsNullOrEmpty(user?.Email))
+        {
+            var emailResponse = await httpClient.GetAsync("https://api.github.com/user/emails");
+            if (emailResponse.IsSuccessStatusCode)
+            {
+                var emails = await emailResponse.Content.ReadFromJsonAsync<List<GitHubEmailResponse>>();
+                var primaryEmail = emails?.FirstOrDefault(e => e is { Primary: true, Verified: true })?.Email;
+
+                if (string.IsNullOrEmpty(primaryEmail))
+                {
+                    return BadRequest("Failed to fetch emails from GitHub");
+                }
+
+                user!.Email = primaryEmail;
+            }
+        }
+        
+        // step 4 - find or create user to sign in
+        var existingUser = await signInManager.UserManager.FindByEmailAsync(user!.Email);
+
+        if (existingUser == null)
+        {
+            existingUser = new User()
+            {
+                Email = user.Email,
+                UserName = user.Email,
+                DisplayName = user.Name,
+                ImageUrl = user.ImageUrl
+            };
+
+            var createdResult = await signInManager.UserManager.CreateAsync(existingUser);
+            if (!createdResult.Succeeded)
+            {
+                return BadRequest("Failed to create user");
+            }
+        }
+        
+        await signInManager.SignInAsync(existingUser, false);
+        
+        return Ok();
+    }
+    
     [AllowAnonymous]
     [HttpPost("register")]
     public async Task<ActionResult> RegisterUser(RegisterAccountRequest request)
